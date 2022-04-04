@@ -93,7 +93,7 @@ class FlutterVoipPushNotification {
 
   late MessageHandler _onMessage;
   late MessageHandler _onResume;
-
+  String? _token;
   final StreamController<String> _tokenStreamController =
   StreamController<String>.broadcast();
 
@@ -114,10 +114,11 @@ class FlutterVoipPushNotification {
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {
-    final Map map = call.arguments as Map<String, dynamic>;
+    final Map map = call.arguments.cast<String, dynamic>();
     switch (call.method) {
       case "onToken":
-        _tokenStreamController.add(map["deviceToken"] as String);
+        _token = map["deviceToken"] as String;
+        _tokenStreamController.add(_token!);
         return null;
       case "onMessage":
         return _onMessage(
